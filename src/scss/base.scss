@@ -1,0 +1,21 @@
+:root {
+    --backgroundColor: #fff;
+    --textColor: #333;
+
+    @media (prefers-color-scheme: dark) {
+        --backgroundColor: #161616;
+        --textColor: #fff;
+    }
+
+    font-size: 16px;
+
+    * {
+        box-sizing: border-box;
+    }
+}
+
+body {
+    margin: 10px;
+    background-color: var(--backgroundColor);
+    color: var(--textColor);
+}

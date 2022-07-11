@@ -4,6 +4,7 @@ import * as ReactDOM from "react-dom"
 import * as Sentry from "@sentry/react"
 import {BrowserTracing} from "@sentry/tracing"
 
+import "./scss/base.scss"
 import App from './App'
 
 let mountNode = document.getElementById("app")

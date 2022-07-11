@@ -1,0 +1,110 @@
+@import "../../scss/functions";
+
+.mRangeSelector {
+    --barColor: #666;
+    --pasiveColor: #666;
+    --activeColor: var(--textColor);
+    --handlerColor: var(--textColor);
+
+    @media (prefers-color-scheme: dark) {
+        --inputBorderColor: #999;
+    }
+
+    &__handler {
+        --size: 20px;
+
+        position: absolute;
+        top: 50%;
+        left: var(--position);
+        //width: 40px;
+        height: 40px;
+        flex: 0 0 40px;
+        transform: translateX(-50%) translateY(-50%);
+        will-change: left;
+
+        & > span {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            width: var(--size);
+            height: var(--size);
+            background: var(--handlerColor);
+            border-radius: 50%;
+            transition: all ease-in-out 150ms;
+            will-change: width, height, left;
+        }
+
+        &:hover {
+            --size: 30px;
+
+            cursor: grab;
+        }
+
+        &:active {
+            cursor: grabbing;
+        }
+    }
+
+    &__label {
+        $label: &;
+
+        position: relative;
+        flex: 0 1 auto;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        cursor: text;
+
+        &__input {
+            width: css-max(calc(30px + 1.3ch), calc((var(--characters) * 1ch) + 1.3ch));
+            height: 30px;
+            margin-block: 5px;
+            margin-right: 5px;
+            padding: 0;
+            padding-top: 1px;
+            padding-right: 1.3ch;
+            flex: 1 1 100%;
+            font-size: 1rem;
+            border: 0;
+            border-bottom: 2px solid transparent;
+            text-align: right;
+            transition: border-bottom-color ease-in-out 200ms;
+
+            &:hover {
+                border-bottom-color: var(--activeColor);
+            }
+
+            &:focus-visible {
+                outline: 0;
+                border-bottom-color: var(--activeColor);
+            }
+        }
+
+        &__currency {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        &--currencyPosition-left {
+
+            #{$label} {
+                &__input {
+                    margin-left: 5px;
+                    padding-left: 1.3ch;
+                    margin-right: 0;
+                    padding-right: 0;
+                    text-align: left;
+                }
+
+                &__currency {
+                    right: auto;
+                    left: 5px;
+                }
+            }
+        }
+    }
+}

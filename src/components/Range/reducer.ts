@@ -13,6 +13,8 @@ export enum reducerActions {
 }
 
 export type reducerData = {
+    type: "simple" | "multiple"
+
     minCurrentValue: number
     maxCurrentValue: number
 
@@ -20,6 +22,7 @@ export type reducerData = {
     maxCurrentPosition: number
 
     rangeItems: number[]
+    rangeItemsPositions: number[]
 
     handlerActive: HandlerActive
 
@@ -37,6 +40,8 @@ export type reducerAction = {
 }
 
 export const reducerInitialData: reducerData = {
+    type: "simple",
+
     minCurrentValue: 0,
     maxCurrentValue: 0,
 
@@ -44,8 +49,9 @@ export const reducerInitialData: reducerData = {
     maxCurrentPosition: 0,
 
     rangeItems: [],
+    rangeItemsPositions: [],
 
-    handlerActive:null,
+    handlerActive: null,
 
     editable: true,
     locale: "en",
@@ -69,6 +75,10 @@ export const reducer: React.Reducer<reducerData, reducerAction> = (state: reduce
 
             newState.minCurrentPosition = calculatePercentFromValue(newState.minCurrentValue, newState.rangeItems.at(0), newState.rangeItems.at(-1))
             newState.maxCurrentPosition = calculatePercentFromValue(newState.maxCurrentValue, newState.rangeItems.at(0), newState.rangeItems.at(-1))
+
+            newState.rangeItemsPositions = newState.rangeItems.map((rangeItem)=>{
+                return calculatePercentFromValue(rangeItem, newState.rangeItems.at(0), newState.rangeItems.at(-1))
+            })
 
             return newState
         }

@@ -1,11 +1,13 @@
 :root {
     --backgroundColor: #fff;
     --textColor: #333;
+    --textColorSoft: #727272;
     --highlightColor: #000;
 
     @media (prefers-color-scheme: dark) {
         --backgroundColor: #161616;
         --textColor: #fff;
+        --textColorSoft: #bbb;
     }
 
     font-size: 16px;

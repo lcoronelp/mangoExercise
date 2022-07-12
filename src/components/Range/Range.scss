@@ -12,7 +12,9 @@
         --inputBorderColor: #999;
     }
 
-    * {
+    &,
+    & * {
+        font-family: 'Lato', sans-serif;
         user-select: none;
     }
 
@@ -78,6 +80,7 @@
         display: flex;
         justify-content: flex-start;
         align-items: center;
+        color: var(--textColorSoft);
 
         * {
             cursor: default;
@@ -85,12 +88,12 @@
 
         &__input {
             background-color: var(--backgroundColor);
-            color: var(--textColor);
-            width: css-max(calc(70px + 1.3ch), calc((var(--characters) * 1.2ch) + 1.3ch));
+            color: var(--textColorSoft);
+            width: css-max(calc(70px + 1.4ch), css-max(calc(70px + 1.4ch), calc((var(--minimalCharacters) * 1.2ch) + 1.4ch)));
             height: 30px;
             margin-block: 5px;
             margin-right: 5px;
-            padding: 1px 1.3ch 0 0;
+            padding: 2px 1.4ch 0 0;
             flex: 1 1 100%;
             font-size: 1rem;
             border: 0;
@@ -130,12 +133,16 @@
         }
 
         &--editable {
+            color: var(--textColor);
+
             * {
                 cursor: text;
             }
 
             #{$label} {
                 &__input {
+                    color: var(--textColor);
+
                     &:hover {
                         border-bottom-color: var(--activeColor);
                     }

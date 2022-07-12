@@ -2,9 +2,11 @@ import * as React from "react"
 import {parseNumber} from "../helpers";
 
 interface Props {
-    value: number | undefined
+    value: number
     valueDecimalPositions?: number
     onChangeValue: Function
+
+    biggestValue: number
 
     editable?: boolean
 
@@ -21,12 +23,13 @@ export const Label = (props: Props): JSX.Element => {
     const currencyOnLeft = props.currencyOnLeft ?? false
 
     const inputRef = React.useRef(null)
-    const [characters,setCharacters] = React.useState(0)
+    const [characters, setCharacters] = React.useState(0)
 
-    const [value,setValue] = React.useState(props.value)
+    const [value, setValue] = React.useState(props.value.toString())
+    const [prevValue, setPrevValue] = React.useState(props.value.toString())
 
     const handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {
-        if(!props.editable){
+        if (!props.editable) {
             return
         }
 
@@ -38,17 +41,18 @@ export const Label = (props: Props): JSX.Element => {
             return
         }
 
-        setValue(valueNumber)
-        return props.onChangeValue(target.value)
+        setValue(target.value)
+        return props.onChangeValue(target.value,prevValue)
     }
 
     React.useEffect(() => {
         const content: string = (inputRef.current as unknown as HTMLInputElement).value
         setCharacters(content.length)
-    }, [inputRef.current,value])
+    }, [inputRef.current, value])
 
     React.useEffect(() => {
-        setValue(props.value)
+        setValue(props.value.toString())
+        setPrevValue(props.value.toString())
     }, [props.value])
 
     return (
@@ -59,11 +63,14 @@ export const Label = (props: Props): JSX.Element => {
                 ref={inputRef}
                 readOnly={!props.editable}
                 tabIndex={!props.editable ? -1 : 0}
-                value={value?.toFixed(props.valueDecimalPositions ?? 2)}
+                value={value}
                 onInput={handleInputChange}
                 aria-label={props.aria.label}
                 className={`mRangeSelector__label__input`}
-                style={{"--characters":characters} as React.CSSProperties}
+                style={{
+                    "--characters": characters,
+                    "--minimalCharacters": props.biggestValue.toFixed(props.valueDecimalPositions ?? 2).length
+                } as React.CSSProperties}
             />
 
             <span

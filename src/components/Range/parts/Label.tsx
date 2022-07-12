@@ -1,7 +1,9 @@
 import * as React from "react"
+import {parseNumber} from "../helpers";
 
 interface Props {
     value: number | undefined
+    valueDecimalPositions?: number
     onChangeValue: Function
 
     editable?: boolean
@@ -15,38 +17,49 @@ interface Props {
 }
 
 export const Label = (props: Props): JSX.Element => {
-    const editable = props.editable ?? false
     const currency = props.currency ?? "€"
     const currencyOnLeft = props.currencyOnLeft ?? false
 
     const inputRef = React.useRef(null)
     const [characters,setCharacters] = React.useState(0)
 
-    const handleClickWrapper = (e:any) => {
-        console.log(e)
-        // if(inputRef.current) {
-        //     (inputRef.current as HTMLDivElement).focus()
-        // }
-    }
+    const [value,setValue] = React.useState(props.value)
+
     const handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {
+        if(!props.editable){
+            return
+        }
+
         const target: HTMLInputElement = e.target as HTMLInputElement
-        const content: string = target.value
-        setCharacters(content.length)
+
+        const valueNumber = parseNumber(target.value)
+
+        if (isNaN(valueNumber)) {
+            return
+        }
+
+        setValue(valueNumber)
         return props.onChangeValue(target.value)
     }
 
     React.useEffect(() => {
         const content: string = (inputRef.current as unknown as HTMLInputElement).value
         setCharacters(content.length)
-    }, [inputRef.current])
+    }, [inputRef.current,value])
+
+    React.useEffect(() => {
+        setValue(props.value)
+    }, [props.value])
+
     return (
         <div
-            className={`mRangeSelector__label ${currencyOnLeft ? 'mRangeSelector__label--currencyPosition-left' : ''}`}
-            onClick={handleClickWrapper}
+            className={`mRangeSelector__label ${currencyOnLeft ? 'mRangeSelector__label--currencyPosition-left' : ''}  ${props.editable ? 'mRangeSelector__label--editable' : ''}`}
         >
             <input
                 ref={inputRef}
-                value={props.value}
+                readOnly={!props.editable}
+                tabIndex={!props.editable ? -1 : 0}
+                value={value?.toFixed(props.valueDecimalPositions ?? 2)}
                 onInput={handleInputChange}
                 aria-label={props.aria.label}
                 className={`mRangeSelector__label__input`}

@@ -1,6 +1,7 @@
 :root {
     --backgroundColor: #fff;
     --textColor: #333;
+    --highlightColor: #000;
 
     @media (prefers-color-scheme: dark) {
         --backgroundColor: #161616;
@@ -15,7 +16,9 @@
 }
 
 body {
-    margin: 10px;
+    margin: 0;
+    padding: 10px;
     background-color: var(--backgroundColor);
     color: var(--textColor);
+    min-height: 100vh;
 }

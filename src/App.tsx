@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { hot } from "react-hot-loader/root"
+import {hot} from "react-hot-loader/root"
 import {Helmet} from "react-helmet"
 import {BrowserRouter, Route, Routes} from "react-router-dom"
 import * as Sentry from "@sentry/react"
@@ -7,30 +7,33 @@ import * as Sentry from "@sentry/react"
 import {Loading} from "./common/Loading"
 import {Module} from "./types/Module"
 
-const modulesAvailable: Module[] = [
+const componentsAvailable: Module[] = [
     {
         path: "exercise1",
-        componentName: "rangeSelector",
+        componentName: "Range",
         configurations: {
-            "a": "1"
+            "type": process.env.EXERCISE1_MOCK_TYPE
         }
     },
     {
         path: "exercise2",
-        componentName: "rangeSelector"
+        componentName: "Range",
+        configurations: {
+            "type": process.env.EXERCISE2_MOCK_TYPE
+        }
     }
 ]
 
 const App = (): JSX.Element => {
 
-    // Construct dynamic modules
-    const dynamicModules = modulesAvailable.map((module: Module) => {
+    // Construct dynamic components
+    const dynamicModules = componentsAvailable.map((component: Module) => {
 
-        const DynamicComponent: React.LazyExoticComponent<() => JSX.Element> = React.lazy(() => import(`./modules/${module.componentName}/module`))
+        const DynamicComponent: React.LazyExoticComponent<() => JSX.Element> = React.lazy(() => import(`./components/${component.componentName}/${component.componentName}`))
 
         return {
-            path: module.path,
-            component: <DynamicComponent {...(module.configurations ?? {})}/>
+            path: component.path,
+            component: <DynamicComponent {...(component.configurations ?? {})}/>
         }
     })
 

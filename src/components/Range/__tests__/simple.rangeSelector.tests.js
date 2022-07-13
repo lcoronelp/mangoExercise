@@ -261,7 +261,7 @@ describe('Implicit type rangeSelector actions Tests (min 60, max 1500)', () => {
 
     })
 
-    test('When user click on the right space of range, then the min handle and min value change to middle', async () => {
+    test('When user click on the right space of range, then the max handle and max value change to middle', async () => {
         const minInput = screen.getByRole('textbox', {name: `Min Value`})
         const minHandler = screen.getByRole('button', {name: 'Min Handler'})
 

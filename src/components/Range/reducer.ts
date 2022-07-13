@@ -4,7 +4,7 @@ import {calculatePercentFromValue, calculateValueFromPercent, truncateDecimals} 
 export type HandlerActive = "min" | "max" | null
 
 export enum reducerActions {
-    CONFIGURE = "configure",
+    RECONFIGURE = "reconfigure",
     CHANGE_HANDLER_ACTIVE = "changeHandlerActive",
     CHANGE_CURRENT_MIN_FROM_VALUE = "changeCurrentMinValue",
     CHANGE_CURRENT_MAX_FROM_VALUE = "changeCurrentMaxValue",
@@ -64,7 +64,7 @@ export const reducerInitialData: reducerData = {
 export const reducer: React.Reducer<reducerData, reducerAction> = (state: reducerData, action: reducerAction): reducerData => {
     switch (action.type) {
 
-        case reducerActions.CONFIGURE: {
+        case reducerActions.RECONFIGURE: {
             const newState: reducerData = {
                 ...state,
                 ...action.payload as reducerData

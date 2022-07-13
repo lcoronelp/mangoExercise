@@ -83,8 +83,6 @@ export const RangeSlider = (props: Props): JSX.Element => {
         const percentPosition = getPercentFromPosition(rangeWrapperRef, currentPosition)
 
         return props.onChangePercent(percentPosition, closestMinHandler)
-
-
     }
 
     React.useEffect(() => {
@@ -123,6 +121,7 @@ export const RangeSlider = (props: Props): JSX.Element => {
         >
 
             <div
+                title={"Range space"}
                 style={styles.backgroundBar}
                 onClick={handleBarClick}
             />
@@ -137,6 +136,7 @@ export const RangeSlider = (props: Props): JSX.Element => {
             }/>
 
             <Handler
+                aria={{label: "Min Handler"}}
                 currentPosition={props.minCurrentPosition}
                 currentActive={props.handlerActive === "min"}
                 onActive={() => props.onHandleStatusChange("min")}
@@ -145,6 +145,7 @@ export const RangeSlider = (props: Props): JSX.Element => {
             />
 
             <Handler
+                aria={{label: "Max Handler"}}
                 currentPosition={props.maxCurrentPosition}
                 currentActive={props.handlerActive === "max"}
                 onActive={() => props.onHandleStatusChange("max")}

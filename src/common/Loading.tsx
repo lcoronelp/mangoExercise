@@ -10,4 +10,8 @@ const loadingStyles: { [key: string]: React.CSSProperties } = {
     }
 }
 
-export const Loading = () => <div style={loadingStyles.loadingDiv}/>
+export const Loading = () => (
+    <div style={loadingStyles.loadingDiv}>
+        Loading
+    </div>
+)

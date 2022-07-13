@@ -7,9 +7,6 @@ import {Label} from "./parts/Label"
 import "./Range.scss"
 import {RangeSlider} from "./parts/RangeSlider"
 import {isValid} from "./helpers"
-import {getConfig} from "./ws"
-import {Loading} from "../../common/Loading";
-import {useParams} from "react-router-dom";
 
 const styles: { [key: string]: React.CSSProperties } = {
     wrapper: {
@@ -20,54 +17,48 @@ const styles: { [key: string]: React.CSSProperties } = {
 }
 
 interface Props {
-    type: string
+    initialData: any
 }
 
 const Range = (props: Props) => {
-    const [state, dispatch]: [state: reducerData, dispatch: Function] = React.useReducer(reducer, reducerInitialData)
+    const _isMounted = React.useRef(true)
 
-    const params = useParams()
+    const initialData = {
+        ...reducerInitialData,
+        ...props.initialData
+    }
 
-    React.useEffect(() => {
-        const type = props.type.startsWith("param:") ? params[props.type.replace(/param:/, "")] ?? "" : props.type
-        getConfig(type)
-            .then((jsonData) => {
-                if (jsonData) {
-                    dispatch({
-                        type: reducerActions.CONFIGURE,
-                        payload: jsonData
-                    })
-                }
-            })
-    }, [])
+    const [state, dispatch]: [state: reducerData, dispatch: Function] = React.useReducer(reducer, initialData)
 
     const handleValueRealChange = (value: number, prevValue: number, isMinValue: boolean = false) => {
-        const minValue = state.rangeItems.at(0)
-        const maxValue = state.rangeItems.at(-1)
-        if (typeof (minValue) === "undefined" || typeof (maxValue) === "undefined") {
-            throw new Error("MinValue or MaxValue isn't defined")
-        }
-
-        dispatch({
-            type: isMinValue ? reducerActions.CHANGE_CURRENT_MIN_FROM_VALUE : reducerActions.CHANGE_CURRENT_MAX_FROM_VALUE,
-            payload: +value
-        })
-
-        if (
-            (isMinValue && !isValid(value, minValue, state.maxCurrentValue))
-            ||
-            (!isMinValue && !isValid(value, state.minCurrentValue, maxValue))
-        ) {
-            const newValue = getNewValueConstraint(value, minValue, maxValue, isMinValue, state, prevValue)
+        if (_isMounted.current) {
+            const minValue = state.rangeItems.at(0)
+            const maxValue = state.rangeItems.at(-1)
+            if (typeof (minValue) === "undefined" || typeof (maxValue) === "undefined") {
+                throw new Error("MinValue or MaxValue isn't defined")
+            }
 
             dispatch({
                 type: isMinValue ? reducerActions.CHANGE_CURRENT_MIN_FROM_VALUE : reducerActions.CHANGE_CURRENT_MAX_FROM_VALUE,
-                payload: +newValue
+                payload: +value
             })
+
+            if (
+                (isMinValue && !isValid(value, minValue, state.maxCurrentValue))
+                ||
+                (!isMinValue && !isValid(value, state.minCurrentValue, maxValue))
+            ) {
+                const newValue = getNewValueConstraint(value, minValue, maxValue, isMinValue, state, prevValue)
+
+                dispatch({
+                    type: isMinValue ? reducerActions.CHANGE_CURRENT_MIN_FROM_VALUE : reducerActions.CHANGE_CURRENT_MAX_FROM_VALUE,
+                    payload: +newValue
+                })
+            }
         }
 
     }
-    const debouncedHandleValueChange = React.useMemo(() => debounce(handleValueRealChange, 350), [state])
+    const debouncedHandleValueChange = React.useMemo(() => debounce(handleValueRealChange, 450), [state])
 
     const handleHandlerStatusChange = (handlerActive: HandlerActive = null) => {
         dispatch({
@@ -79,7 +70,7 @@ const Range = (props: Props) => {
     const calculatePercentChangeForMultiple = (testPercent: number, isMinPercent: boolean) => {
         let sortPositions = [...state.rangeItemsPositions]
 
-        /** This comments was keep on purpose, testing two methods to find the closest item
+        /** These comments were keep on purpose, testing two methods to find the closest item
          *  testing the performance of sort vs foreach with break
          *
          *  Results: Not much difference in small groups of positions, but with > 1000 positions the difference can be a little noticed
@@ -92,7 +83,6 @@ const Range = (props: Props) => {
 
             // performance.mark("mark_between")
         const closestPositionByForeach = calculateClosestPositionWithForeach(testPercent, sortPositions, isMinPercent)
-
         // performance.mark("mark_final")
 
         // performance.measure("Sort", "mark_initial", "mark_between")
@@ -144,11 +134,14 @@ const Range = (props: Props) => {
 
     }
 
-    if (!state.rangeItems || state.rangeItems.length < 2) {
-        return (
-            <Loading/>
-        )
-    }
+    React.useEffect(() => {
+        return () => {
+            if(debouncedHandleValueChange.cancel) {
+                debouncedHandleValueChange.cancel()
+            }
+            _isMounted.current = false
+        }
+    }, [])
 
     return (
         <div className={"mRangeSelector"} style={styles.wrapper}>
@@ -156,7 +149,7 @@ const Range = (props: Props) => {
                 aria={{label: "Min Value"}}
                 value={state.minCurrentValue}
                 valueDecimalPositions={state.decimalPositions}
-                biggestValue={state.rangeItems.at(-1) ?? 0}
+                biggestValue={state.rangeItems?.at(-1) ?? 0}
                 editable={state.editable}
                 currencyOnLeft={state.currencyOnLeft}
                 onChangeValue={(tentativeNewValue: number, prevValue: number) => debouncedHandleValueChange(tentativeNewValue, prevValue, true)}
@@ -178,7 +171,7 @@ const Range = (props: Props) => {
                 aria={{label: "Max Value"}}
                 value={state.maxCurrentValue}
                 valueDecimalPositions={state.decimalPositions}
-                biggestValue={state.rangeItems.at(-1) ?? 0}
+                biggestValue={state.rangeItems?.at(-1) ?? 0}
                 editable={state.editable}
                 currencyOnLeft={state.currencyOnLeft}
                 onChangeValue={(tentativeNewValue: number, prevValue: number) => debouncedHandleValueChange(tentativeNewValue, prevValue)}
@@ -189,8 +182,6 @@ const Range = (props: Props) => {
 
 const getNewValueConstraint = (value: number | string, minValue: number, maxValue: number, isMinValue: boolean, state: reducerData, prevValue: number) => {
     if (isMinValue) {
-
-        console.log(typeof value)
 
         if (value === "") {
             return minValue
@@ -208,7 +199,7 @@ const getNewValueConstraint = (value: number | string, minValue: number, maxValu
         }
 
 
-        if (value < state.minCurrentValue || value > maxValue){
+        if (value < state.minCurrentValue || value > maxValue) {
             return prevValue
         }
     }

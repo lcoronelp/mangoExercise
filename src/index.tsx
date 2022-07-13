@@ -3,8 +3,6 @@ import * as ReactDOM from "react-dom"
 
 import {createRoutesFromChildren, matchRoutes, useLocation, useNavigationType} from "react-router-dom"
 
-import {createBrowserHistory} from 'history'
-
 import * as Sentry from "@sentry/react"
 import {BrowserTracing} from "@sentry/tracing"
 
@@ -12,8 +10,6 @@ import "./scss/base.scss"
 import App from './App'
 
 let mountNode = document.getElementById("app")
-
-const history = createBrowserHistory()
 
 Sentry.init({
     environment: process.env.ENVIRONMENT,

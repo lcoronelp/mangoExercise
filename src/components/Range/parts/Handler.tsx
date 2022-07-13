@@ -8,6 +8,11 @@ interface Props {
 
     onActive: Function,
     onInactive: Function,
+
+    aria: {
+        label: string
+    }
+
 }
 
 export const Handler = (props: Props): JSX.Element => {
@@ -15,7 +20,7 @@ export const Handler = (props: Props): JSX.Element => {
         props.onActive()
     }
     const handleInactive = () => {
-        if(props.handlerRef.current) {
+        if (props.handlerRef.current) {
             (props.handlerRef.current as HTMLButtonElement).blur()
         }
         props.onInactive()
@@ -29,6 +34,7 @@ export const Handler = (props: Props): JSX.Element => {
                     "left": `${props.currentPosition ?? 0}%`
                 } as React.CSSProperties
             }}
+            aria-label={props.aria.label}
             onMouseDown={handleActive}
             onMouseUp={handleInactive}
         >

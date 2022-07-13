@@ -1,3 +1,5 @@
+import {calculatePercentFromValue} from "../components/Range/helpers"
+
 const baseUrl = process.env.FAKE_API_BASE_URL
 
 const basicRequestOptions: any = {
@@ -20,7 +22,7 @@ export const getConfig = async (type: string) => {
             const rangeItems = json.rangeItems
             rangeItems.sort((a: number, b: number) => a - b)
 
-            return {
+            const data:any = {
                 locale: json.locale ?? "en",
                 decimalPositions: json.decimalPositions ?? 2,
 
@@ -31,6 +33,19 @@ export const getConfig = async (type: string) => {
                 editable: json.rangeItems.length === 2,
                 rangeItems: rangeItems
             }
+
+            data.minCurrentValue = json.minCurrentValue ?? data.rangeItems.at(0)
+            data.maxCurrentValue = json.maxCurrentValue ?? data.rangeItems.at(-1)
+
+            data.minCurrentPosition = calculatePercentFromValue(data.minCurrentValue, data.rangeItems.at(0), data.rangeItems.at(-1))
+            data.maxCurrentPosition = calculatePercentFromValue(data.maxCurrentValue, data.rangeItems.at(0), data.rangeItems.at(-1))
+
+            data.rangeItemsPositions = data.rangeItems.map((rangeItem:number)=>{
+                return calculatePercentFromValue(rangeItem, data.rangeItems.at(0), data.rangeItems.at(-1))
+            })
+
+            return data
+
         })
         .catch((error) => {
             throw(error)

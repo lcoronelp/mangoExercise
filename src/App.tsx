@@ -10,21 +10,21 @@ import {RouteAvailable} from "./types/RouteAvailable"
 const routesAvailable: RouteAvailable[] = [
     {
         path: "exercise1",
-        componentName: "Range",
+        componentName: "Loader",
         configurations: {
             "type": process.env.EXERCISE1_MOCK_TYPE ?? ""
         }
     },
     {
         path: "exercise2",
-        componentName: "Range",
+        componentName: "Loader",
         configurations: {
             "type": process.env.EXERCISE2_MOCK_TYPE ?? ""
         }
     },
     {
         path: "exerciseGeneric/:type",
-        componentName: "Range",
+        componentName: "Loader",
         configurations: {
             "type": "param:type"
         }
@@ -36,7 +36,7 @@ const App = (): JSX.Element => {
     // Construct dynamic components
     const dynamicModules = routesAvailable.map((component: RouteAvailable) => {
 
-        const DynamicComponent: React.LazyExoticComponent<() => JSX.Element> = React.lazy(() => import(`./components/${component.componentName}/${component.componentName}`))
+        const DynamicComponent: React.LazyExoticComponent<() => JSX.Element> = React.lazy(() => import(`./${component.componentName}`))
         return {
             path: component.path,
             component: <DynamicComponent {...component.configurations}/>

@@ -2,7 +2,7 @@
 
 Last updated: 14/07/2022
 
-## requirements
+## Requirements
 
 ### Development
 - node

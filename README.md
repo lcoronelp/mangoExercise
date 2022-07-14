@@ -80,23 +80,33 @@ https://localhost:1337/exerciseGeneric/6a25e34a-a46a-4812-9dbb-485228a2b5d7
 
 ## Implementation documentation
 
-The component `<Range />` have one configurable attribute called `initialData` that is a React object with these properties:
+The component `<Range />` have one configurable attribute called `initialData` that is an object with these properties:
 
 | Property           | Required | Type       | Default Value | Description                                                                                       |
 |--------------------|----------|------------|---------------|---------------------------------------------------------------------------------------------------|
-| `rangeItems`       | `true`   | `number[]` | `null`        | The array with the items to show in the range, can be in order or not (the component reorder it)  |
+| `rangeItems`       | `true`   | `number[]` | `null`        | The array with the items to show in the range, can be in order or not (the component reorders it) |
 | `decimalPositions` | `false`  | `int`      | `2`           | Quantity of maximum decimals to show                                                              |
 | `currency`         | `false`  | `string`   | `"€"`         | Currency to show                                                                                  |
 | `currencyOnLeft`   | `false`  | `boolean`  | `false`       | Define if currency is on left (true) or right (false), also modifies the text alignment of inputs |
 | `locale`           | `false`  | `string`   | `"en"`        | (Not implemented yet) Define the locale of inputs                                                 |
 
 ## Notes
-- Additionally, to the requested functionality, if the user cross with handlers the another handler, then start to move the other, this behaviour avoids the problem with same position handlers
-- The component have a small approach to satisfy the AA WCAG but not work all by keyboard (we can add keydown when handler is focused to allow movements with left/right arrows for example)
-- The component respect the user preference of color theme (have light and dark theme)
-- At the lateral inputs, probably we need do more work with the carets (specially when the introduced data isn't valid)
-- The solution of solve cross selection maybe need to change to block (this is business decision)
-- When the user introduce invalid data in the inputs, probably we can show the error somehow, for example a toast or a message below the input
-- The production docker is only an example, in reality will be https and can use docker swarm replicas
+- Improving the UX, if the user crosses one handler with the other handler, then the change is transferred to the other; This behaviour avoids the problem with same position handlers
+- I work with:
+    - `Commitlint` and `Conventional commits` (with `husky`) to force the programmers on this project to follow a standard
+    - `Stylelint` and `SonarLint` to check the `scss` and `css` files and standardize it
+    - `Typescript` to make the code more robust
+    - `Jest` and `Testing library` for testing
+    - `Docker` to make a production simulation
+    - `Webpack` and `babel` to transpile the code
+    - `C Make` to facilitate the execution of scripts
+- The component has a small approach to satisfy the WCAG AA requirements, but doesn't work by keyboard completely (we can add `keydown` when handler is focused to allow movements with left/right arrows ,for example)
+- The component respects the user preference of color theme (has light and dark theme)
+- Regarding the lateral inputs, probably we need do more work with the carets (specially when the introduced data isn't valid)
+- The applied solution to avoid cross range in handlers, might need to be changed to block the movement of selected handler if it crosses the other (this is business decision)
+- When the user introduces invalid data in the inputs, probably we can show the error somehow, for example a toast or a message below the input
+- The production docker is only an example, in reality it will be https and can use docker swarm replicas
 - The tests were made with jest and testing-library, additionally, we can test directly all helpers functions and test with cypress or puppeteer directly in real browser (or multiple browser compatibility)
-- To improve the UX, we can add labels to fixed positions below the bar, but in responsive, we will be found a solution with overlap of labels (hiding the odds progressively except the first and last for example)
+- To improve the UX, we can add labels to fixed positions below the bar, but in responsive, we will need to find a solution for overlap of labels (hiding the odds progressively except the first and last for example)
+- The architecture of this project, probably will need improvements, because in that case, we will use multiples components instead of one
+- The component `Label` can be an isolated component, but for this exercise, I think it's not opportune

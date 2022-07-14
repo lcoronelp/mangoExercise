@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+
+    mango_exercise_react-prod:
+        container_name: mango_exercise_react-prod
+        build:
+            context: .
+            dockerfile: Dockerfile_prod
+        ports:
+            - '1337:80'

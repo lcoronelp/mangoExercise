@@ -110,7 +110,7 @@ const config = {
             directory: './dist',
         },
         compress: true,
-        port: 50000,
+        port: 8080,
     },
     resolve: {
         extensions: [

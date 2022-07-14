@@ -5,4 +5,4 @@ dev:
 	yarn start
 
 test:
-	echo "WIP!"
+	yarn test $(ARGS)

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {debounce} from 'lodash'
 
-import {HandlerActive, reducer, reducerActions, reducerData, reducerInitialData} from "./reducer"
+import {HandlerActive, insertData, reducer, reducerActions, reducerData} from "./reducer"
 import {Label} from "./parts/Label"
 
 import "./Range.scss"
@@ -23,10 +23,7 @@ interface Props {
 const Range = (props: Props) => {
     const _isMounted = React.useRef(true)
 
-    const initialData = {
-        ...reducerInitialData,
-        ...props.initialData
-    }
+    const initialData = insertData(props.initialData)
 
     const [state, dispatch]: [state: reducerData, dispatch: Function] = React.useReducer(reducer, initialData)
 

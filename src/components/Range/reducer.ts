@@ -65,22 +65,7 @@ export const reducer: React.Reducer<reducerData, reducerAction> = (state: reduce
     switch (action.type) {
 
         case reducerActions.RECONFIGURE: {
-            const newState: reducerData = {
-                ...state,
-                ...action.payload as reducerData
-            }
-
-            newState.minCurrentValue = action.payload.minCurrentValue ?? newState.rangeItems.at(0)
-            newState.maxCurrentValue = action.payload.maxCurrentValue ?? newState.rangeItems.at(-1)
-
-            newState.minCurrentPosition = calculatePercentFromValue(newState.minCurrentValue, newState.rangeItems.at(0), newState.rangeItems.at(-1))
-            newState.maxCurrentPosition = calculatePercentFromValue(newState.maxCurrentValue, newState.rangeItems.at(0), newState.rangeItems.at(-1))
-
-            newState.rangeItemsPositions = newState.rangeItems.map((rangeItem)=>{
-                return calculatePercentFromValue(rangeItem, newState.rangeItems.at(0), newState.rangeItems.at(-1))
-            })
-
-            return newState
+            return insertData(action.payload, state)
         }
 
         case reducerActions.CHANGE_HANDLER_ACTIVE: {
@@ -125,4 +110,26 @@ export const reducer: React.Reducer<reducerData, reducerAction> = (state: reduce
         default:
             return state
     }
+}
+
+export const insertData = (newData: reducerData, prevData = reducerInitialData) => {
+    const newState: reducerData = {
+        ...prevData,
+        ...newData
+    }
+
+    newState.minCurrentValue = newData.minCurrentValue ?? newState.rangeItems.at(0)
+    newState.maxCurrentValue = newData.maxCurrentValue ?? newState.rangeItems.at(-1)
+
+    newState.minCurrentPosition = calculatePercentFromValue(newState.minCurrentValue, newState.rangeItems.at(0), newState.rangeItems.at(-1))
+    newState.maxCurrentPosition = calculatePercentFromValue(newState.maxCurrentValue, newState.rangeItems.at(0), newState.rangeItems.at(-1))
+
+    newState.rangeItemsPositions = newState.rangeItems.map((rangeItem) => {
+        return calculatePercentFromValue(rangeItem, newState.rangeItems.at(0), newState.rangeItems.at(-1))
+    })
+
+    newState.type = newState.rangeItems.length === 2 ? "simple" : "multiple"
+    newState.editable = newState.rangeItems.length === 2
+
+    return newState
 }

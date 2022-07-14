@@ -16,7 +16,10 @@ interface Props {
 }
 
 export const Handler = (props: Props): JSX.Element => {
-    const handleActive = () => {
+    const handleActive = (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (e.button !== 0) {
+            return
+        }
         props.onActive()
     }
     const handleInactive = () => {

@@ -91,10 +91,12 @@ The component `<Range />` have one configurable attribute called `initialData` t
 | `locale`           | `false`  | `string`   | `"en"`        | (Not implemented yet) Define the locale of inputs                                                 |
 
 ## Notes
-- The component have a small approach to satisfy the AA WCAG
-- The component respect the user preference of color theme
+- Additionally, to the requested functionality, if the user cross with handlers the another handler, then start to move the other, this behaviour avoids the problem with same position handlers
+- The component have a small approach to satisfy the AA WCAG but not work all by keyboard (we can add keydown when handler is focused to allow movements with left/right arrows for example)
+- The component respect the user preference of color theme (have light and dark theme)
 - At the lateral inputs, probably we need do more work with the carets (specially when the introduced data isn't valid)
 - The solution of solve cross selection maybe need to change to block (this is business decision)
 - When the user introduce invalid data in the inputs, probably we can show the error somehow, for example a toast or a message below the input
 - The production docker is only an example, in reality will be https and can use docker swarm replicas
 - The tests were made with jest and testing-library, additionally, we can test directly all helpers functions and test with cypress or puppeteer directly in real browser (or multiple browser compatibility)
+- To improve the UX, we can add labels to fixed positions below the bar, but in responsive, we will be found a solution with overlap of labels (hiding the odds progressively except the first and last for example)

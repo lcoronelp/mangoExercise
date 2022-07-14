@@ -15,15 +15,13 @@ describe('Explicit type basic Tests ([1.99, 5.99, 10.99, 30.99, 50.99, 70.99])',
     })
 
     test('Basic render', () => {
-        const minInputExpect = expect(screen.getByRole('textbox', {name: 'Min Value'}))
+        const minInputExpect = expect(screen.queryByTitle('Min Value'))
         minInputExpect.toBeInTheDocument()
-        minInputExpect.toHaveAttribute('readonly')
-        minInputExpect.toHaveValue('1.99')
+        minInputExpect.toHaveTextContent('1.99')
 
-        const maxInputExpect = expect(screen.getByRole('textbox', {name: 'Max Value'}))
+        const maxInputExpect = expect(screen.queryByTitle('Max Value'))
         maxInputExpect.toBeInTheDocument()
-        maxInputExpect.toHaveAttribute('readonly')
-        maxInputExpect.toHaveValue('70.99')
+        maxInputExpect.toHaveTextContent('70.99')
 
         const minHandlerExpect = expect(screen.getByRole('button', {name: 'Min Handler'}))
         minHandlerExpect.toBeInTheDocument()

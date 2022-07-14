@@ -48,7 +48,7 @@ describe('Explicit type rangeSelector actions Tests ([1.99, 5.99, 10.99, 30.99, 
     })
 
     test('When user drag min handle to right 20px, then the min handle and min value change to closest position', async () => {
-        const minInput = screen.getByRole('textbox', {name: `Min Value`})
+        const minInput = screen.queryByTitle('Min Value')
         const minHandler = screen.getByRole('button', {name: 'Min Handler'})
 
         const current = {
@@ -70,7 +70,7 @@ describe('Explicit type rangeSelector actions Tests ([1.99, 5.99, 10.99, 30.99, 
     })
 
     test('When user drag max handle to left 20px, then the max handle and max value change to closest position', async () => {
-        const maxInput = screen.getByRole('textbox', {name: `Max Value`})
+        const maxInput = screen.queryByTitle('Max Value')
         const maxHandler = screen.getByRole('button', {name: 'Max Handler'})
 
         const current = {
@@ -93,10 +93,10 @@ describe('Explicit type rangeSelector actions Tests ([1.99, 5.99, 10.99, 30.99, 
 
 
     test('When user click on the center of range, then the max handle and max value change to closest position', async () => {
-        const minInput = screen.getByRole('textbox', {name: `Min Value`})
+        const minInput = screen.queryByTitle('Min Value')
         const minHandler = screen.getByRole('button', {name: 'Min Handler'})
 
-        const maxInput = screen.getByRole('textbox', {name: `Max Value`})
+        const maxInput = screen.queryByTitle('Max Value')
         const maxHandler = screen.getByRole('button', {name: 'Max Handler'})
 
         const range = screen.getByTitle('Range space')
@@ -111,10 +111,10 @@ describe('Explicit type rangeSelector actions Tests ([1.99, 5.99, 10.99, 30.99, 
     })
 
     test('When user click on the left space of range, then the min handle and min value change to closest position', async () => {
-        const minInput = screen.getByRole('textbox', {name: `Min Value`})
+        const minInput = screen.queryByTitle('Min Value')
         const minHandler = screen.getByRole('button', {name: 'Min Handler'})
 
-        const maxInput = screen.getByRole('textbox', {name: `Max Value`})
+        const maxInput = screen.queryByTitle('Max Value')
         const maxHandler = screen.getByRole('button', {name: 'Max Handler'})
 
         const range = screen.getByTitle('Range space')
@@ -129,10 +129,10 @@ describe('Explicit type rangeSelector actions Tests ([1.99, 5.99, 10.99, 30.99, 
     })
 
     test('When user click on the right space of range, then the min handle and min value change to closest position', async () => {
-        const minInput = screen.getByRole('textbox', {name: `Min Value`})
+        const minInput = screen.queryByTitle('Min Value')
         const minHandler = screen.getByRole('button', {name: 'Min Handler'})
 
-        const maxInput = screen.getByRole('textbox', {name: `Max Value`})
+        const maxInput = screen.queryByTitle('Max Value')
         const maxHandler = screen.getByRole('button', {name: 'Max Handler'})
 
         const range = screen.getByTitle('Range space')

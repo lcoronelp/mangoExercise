@@ -13,6 +13,7 @@ export enum reducerActions {
 }
 
 export type reducerData = {
+    error: false | string
     type: "simple" | "multiple"
 
     minCurrentValue: number
@@ -40,6 +41,7 @@ export type reducerAction = {
 }
 
 export const reducerInitialData: reducerData = {
+    error: false,
     type: "simple",
 
     minCurrentValue: 0,
@@ -79,7 +81,7 @@ export const reducer: React.Reducer<reducerData, reducerAction> = (state: reduce
             return {
                 ...state,
                 minCurrentValue: truncateDecimals(action.payload, state.decimalPositions),
-                minCurrentPosition: calculatePercentFromValue(action.payload as number, state.rangeItems.at(0), state.rangeItems.at(-1))
+                minCurrentPosition: calculatePercentFromValue(action.payload as number, state.rangeItems.at(0) as number, state.rangeItems.at(-1) as number)
             } as reducerData
         }
 
@@ -87,14 +89,14 @@ export const reducer: React.Reducer<reducerData, reducerAction> = (state: reduce
             return {
                 ...state,
                 maxCurrentValue: truncateDecimals(action.payload, state.decimalPositions),
-                maxCurrentPosition: calculatePercentFromValue(action.payload as number, state.rangeItems.at(0), (state.rangeItems.at(-1) ?? 0))
+                maxCurrentPosition: calculatePercentFromValue(action.payload as number, state.rangeItems.at(0) as number, state.rangeItems.at(-1) as number)
             } as reducerData
         }
 
         case reducerActions.CHANGE_CURRENT_MIN_FROM_PERCENT: {
             return {
                 ...state,
-                minCurrentValue: truncateDecimals(calculateValueFromPercent(action.payload as number, state.rangeItems.at(0), (state.rangeItems.at(-1) ?? 0)), state.decimalPositions),
+                minCurrentValue: truncateDecimals(calculateValueFromPercent(action.payload as number, state.rangeItems.at(0) as number, state.rangeItems.at(-1) as number), state.decimalPositions),
                 minCurrentPosition: action.payload as number
             } as reducerData
         }
@@ -102,7 +104,7 @@ export const reducer: React.Reducer<reducerData, reducerAction> = (state: reduce
         case reducerActions.CHANGE_CURRENT_MAX_FROM_PERCENT: {
             return {
                 ...state,
-                maxCurrentValue: truncateDecimals(calculateValueFromPercent(action.payload as number, state.rangeItems.at(0), (state.rangeItems.at(-1) ?? 0)), state.decimalPositions),
+                maxCurrentValue: truncateDecimals(calculateValueFromPercent(action.payload as number, state.rangeItems.at(0) as number, state.rangeItems.at(-1) as number), state.decimalPositions),
                 maxCurrentPosition: action.payload as number
             } as reducerData
         }
@@ -113,23 +115,45 @@ export const reducer: React.Reducer<reducerData, reducerAction> = (state: reduce
 }
 
 export const insertData = (newData: reducerData, prevData = reducerInitialData) => {
+
     const newState: reducerData = {
         ...prevData,
         ...newData
     }
 
-    newState.minCurrentValue = newData.minCurrentValue ?? newState.rangeItems.at(0)
-    newState.maxCurrentValue = newData.maxCurrentValue ?? newState.rangeItems.at(-1)
+    try {
+        if (!newState.rangeItems || newState.rangeItems.length < 2) {
+            throw new Error("The webservice don't return the minimum data to work")
+        }
 
-    newState.minCurrentPosition = calculatePercentFromValue(newState.minCurrentValue, newState.rangeItems.at(0), newState.rangeItems.at(-1))
-    newState.maxCurrentPosition = calculatePercentFromValue(newState.maxCurrentValue, newState.rangeItems.at(0), newState.rangeItems.at(-1))
+        if (newState.rangeItems.some((item: any) => typeof item !== "number")) {
+            throw new Error("Some of the items in 'rangeItems' returned by the webservice are not numbers")
+        }
 
-    newState.rangeItemsPositions = newState.rangeItems.map((rangeItem) => {
-        return calculatePercentFromValue(rangeItem, newState.rangeItems.at(0), newState.rangeItems.at(-1))
-    })
+        // Verify the order of items
+        const rangeItems = [...newState.rangeItems]
+        rangeItems.sort((a: number, b: number) => a - b)
+        newState.rangeItems = rangeItems
 
-    newState.type = newState.rangeItems.length === 2 ? "simple" : "multiple"
-    newState.editable = newState.rangeItems.length === 2
+        const minValue = newState.rangeItems.at(0) as number
+        const maxValue = newState.rangeItems.at(-1) as number
+
+        newState.minCurrentValue = newData.minCurrentValue ?? minValue
+        newState.maxCurrentValue = newData.maxCurrentValue ?? maxValue
+
+        newState.minCurrentPosition = calculatePercentFromValue(newState.minCurrentValue, minValue, maxValue)
+        newState.maxCurrentPosition = calculatePercentFromValue(newState.maxCurrentValue, minValue, maxValue)
+
+        newState.rangeItemsPositions = newState.rangeItems.map((rangeItem) => {
+            return calculatePercentFromValue(rangeItem, minValue, maxValue)
+        })
+
+        newState.type = newState.rangeItems.length === 2 ? "simple" : "multiple"
+        newState.editable = newState.rangeItems.length === 2
+
+    } catch (e: any) {
+        newState.error = e.toString()
+    }
 
     return newState
 }

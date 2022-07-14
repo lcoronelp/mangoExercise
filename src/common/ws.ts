@@ -13,27 +13,23 @@ export const getConfig = async (type: string) => {
     return fetch(url, basicRequestOptions)
         .then(res => res.json())
         .then(json => {
-            if (!json.rangeItems || json.rangeItems.length < 2) {
-                throw new Error("The webservice don't return the minimum data to work")
-            }
-
-            const rangeItems = json.rangeItems
-            rangeItems.sort((a: number, b: number) => a - b)
-
-            const data:any = {
+            const data: any = {
                 locale: json.locale ?? "en",
                 decimalPositions: json.decimalPositions ?? 2,
 
                 currency: json.currency ?? "€",
                 currencyOnLeft: json.currenctyOnLeft ?? false,
 
-                rangeItems: rangeItems
+                rangeItems: json.rangeItems
             }
 
             return data
 
         })
         .catch((error) => {
-            throw(error)
+            console.error(error)
+            return {
+                error: error.toString()
+            }
         })
 }

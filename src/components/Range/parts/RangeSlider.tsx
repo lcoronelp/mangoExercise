@@ -10,7 +10,8 @@ const styles: { [key: string]: React.CSSProperties } = {
         height: 40,
         paddingBlock: 15,
         marginInline: 20,
-        cursor: "pointer"
+        cursor: "pointer",
+        zIndex: 1
     },
     backgroundBar: {
         position: "absolute",

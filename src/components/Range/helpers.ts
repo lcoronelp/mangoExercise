@@ -2,29 +2,15 @@ export const parseNumber = (number: string) => {
     return +number
 }
 
-export const isValid = (value: number, minValue: number | undefined, maxValue: number | undefined) => {
-    if (typeof (minValue) === "undefined" || typeof (maxValue) === "undefined") {
-        throw new Error("MinValue or MaxValue isn't defined")
-    }
-
+export const isValid = (value: number, minValue: number, maxValue: number) => {
     return value >= minValue && value <= maxValue
 }
 
-export const calculatePercentFromValue = (value: number, minValue: number | undefined, maxValue: number | undefined) => {
-    if (typeof (minValue) === "undefined" || typeof (maxValue) === "undefined") {
-        throw new Error("MinValue or MaxValue isn't defined")
-    }
-
-
+export const calculatePercentFromValue = (value: number, minValue: number, maxValue: number) => {
     return (value - minValue) / (maxValue - minValue) * 100
 }
 
-export const calculateValueFromPercent = (value: number, minValue: number | undefined, maxValue: number | undefined) => {
-    if (typeof (minValue) === "undefined" || typeof (maxValue) === "undefined") {
-        throw new Error("MinValue or MaxValue isn't defined")
-    }
-
-
+export const calculateValueFromPercent = (value: number, minValue: number, maxValue: number) => {
     return ((maxValue - minValue) * value / 100) + minValue
 }
 

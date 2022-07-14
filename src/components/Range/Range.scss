@@ -8,6 +8,8 @@
     --middleColor: #424242;
     --handlerColor: var(--textColor);
 
+    isolation: isolate;
+
     @media (prefers-color-scheme: dark) {
         --inputBorderColor: #999;
     }
@@ -86,7 +88,8 @@
             cursor: default;
         }
 
-        &__input {
+        &__input,
+        &__output {
             background-color: var(--backgroundColor);
             color: var(--textColorSoft);
             width: css-max(calc(70px + 1.4ch), css-max(calc(70px + 1.4ch), calc((var(--minimalCharacters) * 1.2ch) + 1.4ch)));
@@ -104,6 +107,24 @@
             &:focus-visible {
                 outline: 0;
             }
+        }
+
+        &__input {
+            color: var(--textColor);
+
+            &:hover {
+                border-bottom-color: var(--activeColor);
+            }
+
+            &:focus-visible {
+                border-bottom-color: var(--activeColor);
+            }
+        }
+
+        &__output {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
         }
 
         &__currency {
@@ -125,6 +146,10 @@
                     text-align: left;
                 }
 
+                &__output {
+                    justify-content: flex-start;
+                }
+
                 &__currency {
                     right: auto;
                     left: 5px;
@@ -137,20 +162,6 @@
 
             * {
                 cursor: text;
-            }
-
-            #{$label} {
-                &__input {
-                    color: var(--textColor);
-
-                    &:hover {
-                        border-bottom-color: var(--activeColor);
-                    }
-
-                    &:focus-visible {
-                        border-bottom-color: var(--activeColor);
-                    }
-                }
             }
         }
     }

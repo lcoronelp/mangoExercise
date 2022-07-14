@@ -42,7 +42,7 @@ export const Label = (props: Props): JSX.Element => {
         }
 
         setValue(target.value)
-        return props.onChangeValue(target.value,prevValue)
+        return props.onChangeValue(target.value, prevValue)
     }
 
     React.useEffect(() => {
@@ -55,23 +55,41 @@ export const Label = (props: Props): JSX.Element => {
         setPrevValue(props.value.toString())
     }, [props.value])
 
-    return (
-        <div
-            className={`mRangeSelector__label ${currencyOnLeft ? 'mRangeSelector__label--currencyPosition-left' : ''}  ${props.editable ? 'mRangeSelector__label--editable' : ''}`}
-        >
-            <input
+    let input = (
+        <input
+            ref={inputRef}
+            value={value}
+            onInput={handleInputChange}
+            aria-label={props.aria.label}
+            className={`mRangeSelector__label__input`}
+            style={{
+                "--characters": characters,
+                "--minimalCharacters": props.biggestValue.toFixed(props.valueDecimalPositions ?? 2).length
+            } as React.CSSProperties}
+        />
+    )
+
+    if (!props.editable) {
+        input = (
+            <output
                 ref={inputRef}
-                readOnly={!props.editable}
-                tabIndex={!props.editable ? -1 : 0}
-                value={value}
-                onInput={handleInputChange}
                 aria-label={props.aria.label}
-                className={`mRangeSelector__label__input`}
+                className={`mRangeSelector__label__output`}
                 style={{
                     "--characters": characters,
                     "--minimalCharacters": props.biggestValue.toFixed(props.valueDecimalPositions ?? 2).length
                 } as React.CSSProperties}
-            />
+            >
+                {value}
+            </output>
+        )
+    }
+
+    return (
+        <div
+            className={`mRangeSelector__label ${currencyOnLeft ? 'mRangeSelector__label--currencyPosition-left' : ''}  ${props.editable ? 'mRangeSelector__label--editable' : ''}`}
+        >
+            {input}
 
             <span
                 className={`mRangeSelector__label__currency`}

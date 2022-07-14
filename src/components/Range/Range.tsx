@@ -29,11 +29,8 @@ const Range = (props: Props) => {
 
     const handleValueRealChange = (value: number, prevValue: number, isMinValue: boolean = false) => {
         if (_isMounted.current) {
-            const minValue = state.rangeItems.at(0)
-            const maxValue = state.rangeItems.at(-1)
-            if (typeof (minValue) === "undefined" || typeof (maxValue) === "undefined") {
-                throw new Error("MinValue or MaxValue isn't defined")
-            }
+            const minValue = state.rangeItems.at(0) as number
+            const maxValue = state.rangeItems.at(-1) as number
 
             dispatch({
                 type: isMinValue ? reducerActions.CHANGE_CURRENT_MIN_FROM_VALUE : reducerActions.CHANGE_CURRENT_MAX_FROM_VALUE,
@@ -140,8 +137,13 @@ const Range = (props: Props) => {
         }
     }, [])
 
+    if (state.error) {
+        console.error(state.error)
+        return <></>
+    }
+
     return (
-        <div className={"mRangeSelector"} style={styles.wrapper}>
+        <main className={"mRangeSelector"} style={styles.wrapper} title={"Range Selector"}>
             <Label
                 aria={{label: "Min Value"}}
                 value={state.minCurrentValue}
@@ -173,7 +175,7 @@ const Range = (props: Props) => {
                 currencyOnLeft={state.currencyOnLeft}
                 onChangeValue={(tentativeNewValue: number, prevValue: number) => debouncedHandleValueChange(tentativeNewValue, prevValue)}
             />
-        </div>
+        </main>
     )
 }
 

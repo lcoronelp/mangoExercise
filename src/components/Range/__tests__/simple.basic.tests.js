@@ -15,6 +15,8 @@ describe('Implicit type basic Tests (min 60, max 1500)', () => {
     })
 
     test('Basic render', () => {
+        expect(screen.getByTitle("Range Selector")).toBeInTheDocument()
+
         const minInputExpect = expect(screen.getByRole('textbox', {name: 'Min Value'}))
         minInputExpect.toBeInTheDocument()
         minInputExpect.not.toHaveAttribute('readonly')

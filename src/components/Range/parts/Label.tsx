@@ -61,6 +61,7 @@ export const Label = (props: Props): JSX.Element => {
             value={value}
             onInput={handleInputChange}
             aria-label={props.aria.label}
+            title={props.aria.label}
             className={`mRangeSelector__label__input`}
             style={{
                 "--characters": characters,
@@ -74,6 +75,7 @@ export const Label = (props: Props): JSX.Element => {
             <output
                 ref={inputRef}
                 aria-label={props.aria.label}
+                title={props.aria.label}
                 className={`mRangeSelector__label__output`}
                 style={{
                     "--characters": characters,
